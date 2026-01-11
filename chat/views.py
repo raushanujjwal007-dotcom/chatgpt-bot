@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
 # Use your real API key here
-OPENROUTER_API_KEY = "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"
+OPENROUTER_API_KEY ='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'
 
 @csrf_exempt
 def chat_view(request):
