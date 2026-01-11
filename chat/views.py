@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
 # Use your real API key here
-OPENROUTER_API_KEY ='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'
+OPENROUTER_API_KEY ='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'
 
 @csrf_exempt
 def chat_view(request):
@@ -16,8 +16,7 @@ def chat_view(request):
         headers = {
             "Authorization": f"Bearer {OPENROUTER_API_KEY}",  # Must be Bearer + API key
             "Content-Type": "application/json",
-            "Referer": "http://localhost:8000",
-            "X-Title": "Django Chatbot"
+           
         }
 
         payload = {

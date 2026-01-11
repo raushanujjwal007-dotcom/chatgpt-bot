@@ -127,5 +127,5 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-OPENROUTER_API_KEY = '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'
+OPENROUTER_API_KEY = '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'
 
