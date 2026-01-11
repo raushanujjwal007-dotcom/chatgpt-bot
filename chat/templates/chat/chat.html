@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT Demo</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{% static 'chat/chat.css' %}">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">ChatGPT Demo</div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <form class="chat-input" id="chat-form">
+            <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script>
+        // CSRF token setup for Django AJAX POST
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        function sendMessage() {
+            var userInput = $('#user-input').val();
+            if (userInput.trim() !== '') {
+                $('#chat-messages').append('<div class="message user"><strong>You:</strong> ' + userInput + '</div>');
+                $('#user-input').val('');
+                $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+
+                $.ajax({
+                    url: '{% url "chat" %}',
+                    type: 'POST',
+                    headers: {'X-CSRFToken': csrftoken},
+                    data: {'message': userInput},
+                    success: function(response) {
+                        $('#chat-messages').append('<div class="message ai"><strong>AI:</strong> ' + response.message + '</div>');
+                        $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+                    },
+                    error: function(err) {
+                        $('#chat-messages').append('<div class="message ai"><strong>AI:</strong> Error! Please try again.</div>');
+                    }
+                });
+            }
+        }
+
+        $('#chat-form').on('submit', function(e) {
+            e.preventDefault();
+            sendMessage();
+        });
+
+        $('#user-input').keypress(function(e) {
+            if (e.which == 13) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
